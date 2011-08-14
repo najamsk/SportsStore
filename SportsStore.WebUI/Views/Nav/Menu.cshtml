@@ -1,0 +1,18 @@
+﻿@model SportsStore.WebUI.Models.CategoryListViewModel
+@{Layout = null;}       
+
+@Html.ActionLink("Home", "List", "Product")
+
+@foreach (string cat in Model.Categories)
+{
+    @Html.RouteLink(cat, new
+    {
+        controller = "Product",
+        action = "List",
+        category = cat,
+        page = 1
+    },
+    new { @class = Model.CurrentCategory == cat ? "selected" : null}
+    )
+}
+
