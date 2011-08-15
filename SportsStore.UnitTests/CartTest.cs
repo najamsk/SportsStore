@@ -30,7 +30,7 @@ namespace SportsStore.UnitTests
 
         
         [TestMethod()]
-        public void AddItemTest()
+        public void Add_Items_To_Cart()
         {
             //Arrange
             Cart target = new Cart(); // TODO: Initialize to an appropriate value
@@ -53,7 +53,7 @@ namespace SportsStore.UnitTests
         ///A test for ComputeTotalValue
         ///</summary>
         [TestMethod()]
-        public void ComputeTotalValueTest()
+        public void Compute_TotalValue_Of_Cart()
         {
             //Arrange
             Cart target = new Cart(); // TODO: Initialize to an appropriate value
@@ -74,7 +74,7 @@ namespace SportsStore.UnitTests
         ///A test for Clear
         ///</summary>
         [TestMethod()]
-        public void ClearTest()
+        public void Delete_All_Lines_From_Cart()
         {
 
             Cart target = new Cart(); // TODO: Initialize to an appropriate value
@@ -92,7 +92,7 @@ namespace SportsStore.UnitTests
         ///A test for RemoveLine
         ///</summary>
         [TestMethod()]
-        public void RemoveLineTest()
+        public void Remove_Line_From_Cart()
         {
             Cart target = new Cart(); // TODO: Initialize to an appropriate value
 
@@ -102,6 +102,7 @@ namespace SportsStore.UnitTests
             target.AddItem(products[0], 5);
 
             target.RemoveLine(products[0]);
+
             Product[] results = target.Lines.Select(e=>e.Product).ToArray();
 
             Assert.AreEqual(results.Length, 2);

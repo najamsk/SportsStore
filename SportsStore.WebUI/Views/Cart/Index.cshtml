@@ -21,9 +21,19 @@ ViewBag.Title = "Sports Store: Your Cart";
 @foreach(var line in Model.Cart.Lines) {
 <tr>
 <td align="center">@line.Quantity</td>
+
 <td align="left">@line.Product.Name</td>
 <td align="right">@line.Product.Price.ToString("c")</td>
 <td align="right">@((line.Quantity * line.Product.Price).ToString("c"))</td>
+
+<td>
+@using (Html.BeginForm("RemoveFromCart", "Cart")) {
+@Html.Hidden("ProductId", line.Product.ProductID)
+@Html.HiddenFor(x => x.ReturnUrl)
+<input class="actionButtons" type="submit" value="Remove" />
+}
+</td>
+
 </tr>
 }
 </tbody>
@@ -35,5 +45,6 @@ ViewBag.Title = "Sports Store: Your Cart";
 </tr></tfoot>
 </table>
 <p align="center" class="actionButtons">
+@Html.ActionLink("checkout now", "Checkout")
 <a href="@Model.ReturnUrl">Continue shopping</a>
 </p>

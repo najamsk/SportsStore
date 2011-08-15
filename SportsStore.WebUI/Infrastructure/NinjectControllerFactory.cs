@@ -55,7 +55,13 @@ namespace SportsStore.WebUI.Infrastructure
             //Registering the Mock object with IProductRepository
             //ninjectKernel.Bind<IProductRepository>().ToConstant(mock.Object);
             ninjectKernel.Bind<IProductRepository>().To<EFProductRepository>();
-            
+            EmailSettings emailSettings = new EmailSettings
+            {
+                WriteAsFile
+                = bool.Parse(ConfigurationManager.AppSettings["Email.WriteAsFile"] ?? "false")
+            };
+            ninjectKernel.Bind<IOrderProcessor>()
+            .To<EmailOrderProcessor>().WithConstructorArgument("settings", emailSettings);
         }
     }
 }

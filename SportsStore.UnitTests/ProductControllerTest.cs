@@ -21,7 +21,7 @@ namespace SportsStore.UnitTests
     [TestClass()]
     public class ProductControllerTest
     {
-        public Product[] products;
+        private Product[] products;
         [TestInitialize]
         public void PrepareTest()
         {
@@ -35,7 +35,7 @@ namespace SportsStore.UnitTests
             };
         }
         
-        [TestMethod()]
+        [TestMethod]
         public void ProductController_Action_List_CanPaginate()
         {
             //Arrange

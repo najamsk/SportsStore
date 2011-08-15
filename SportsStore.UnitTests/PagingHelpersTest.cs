@@ -17,7 +17,7 @@ namespace SportsStore.UnitTests
     public class PagingHelpersTest
     {
 
-        [TestMethod()]
+        [TestMethod]
         public void PagingHelpers_Can_Genrate_PagingLinks()
         {
             //Arrange 

@@ -8,20 +8,19 @@ using SportsStore.Domain.Entities;
 using Moq;
 using System.Linq;
 using System.Collections.Generic;
-using SportsStore.WebUI.Models;
 
 namespace SportsStore.UnitTests
 {
     
     
     /// <summary>
-    ///This is a test class for NavControllerTest and is intended
-    ///to contain all NavControllerTest Unit Tests
+    ///This is a test class for AdminControllerTest and is intended
+    ///to contain all AdminControllerTest Unit Tests
     ///</summary>
     [TestClass()]
-    public class NavControllerTest
+    public class AdminControllerTest
     {
-        public Product[] products;
+        private Product[] products;
         [TestInitialize]
         public void PrepareTest()
         {
@@ -35,23 +34,21 @@ namespace SportsStore.UnitTests
             };
         }
 
-        [TestMethod]        
-        public void NavController_MenuAction_ReturningDistinctCategories_FromProductsCollection()
+        
+        [TestMethod()]       
+        public void AdminController_IndexAction_Retuns_Products()
         {
             //Arrange
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
-            mock.Setup(m => m.Products).Returns(products.AsQueryable());           
-            NavController target = new NavController(mock.Object); // TODO: Initialize to an appropriate value
+            mock.Setup(m => m.Products).Returns(products.AsQueryable());
+            AdminController target = new AdminController(mock.Object);
 
-            //Action
-            CategoryListViewModel result = (CategoryListViewModel)target.Menu(null).Model;
-            string[] cats = result.Categories.ToArray();
-
+            //Act
+            Product[] result = ((IEnumerable<Product>)target.Index().Model).ToArray();  
+            
             //Assert
-            Assert.IsTrue(cats.Length == 4);
-            Assert.AreEqual(cats[0], "Accounting");
-            Assert.AreEqual(cats[1], "Computers");
-            Assert.AreEqual(cats[2], "Fruit");
+            Assert.AreEqual(6, result.Length);
+            Assert.AreEqual(1, result[0].ProductID);
         }
     }
 }
