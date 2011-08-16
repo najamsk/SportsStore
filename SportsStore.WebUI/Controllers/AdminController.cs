@@ -4,9 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SportsStore.Domain.Abstract;
+using SportsStore.Domain.Entities;
+using System.Data.Objects;
+using System.Data.Entity;
 
 namespace SportsStore.WebUI.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         //
@@ -36,77 +40,54 @@ namespace SportsStore.WebUI.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            return View("Edit", new Product());
         } 
 
-        //
-        // POST: /Admin/Create
-
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        
+                
         //
         // GET: /Admin/Edit/5
  
-        public ActionResult Edit(int id)
+        public ViewResult Edit(int productId)
         {
-            return View();
+            Product product = repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            return View(product);
         }
 
         //
         // POST: /Admin/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(Product product)
         {
-            try
+
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
- 
+                
+                repository.SaveProduct(product);
+                TempData["message"] = string.Format("{0} has been saved", product.Name);
                 return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
-            }
+                return View(product);
+            }            
         }
 
-        //
-        // GET: /Admin/Delete/5
- 
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            
 
         //
         // POST: /Admin/Delete/5
 
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int productId)
         {
-            try
+            Product prod = repository.Products.FirstOrDefault(p => p.ProductID == productId);
+            if (prod != null)
             {
-                // TODO: Add delete logic here
- 
-                return RedirectToAction("Index");
+                repository.DeleteProduct(prod);
+                TempData["message"] = string.Format("{0} was deleted", prod.Name);
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index");
         }
     }
 }

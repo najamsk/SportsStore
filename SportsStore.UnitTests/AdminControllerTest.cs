@@ -50,5 +50,115 @@ namespace SportsStore.UnitTests
             Assert.AreEqual(6, result.Length);
             Assert.AreEqual(1, result[0].ProductID);
         }
+
+       
+        [TestMethod()]        
+        public void Can_LoadProdct_ForEdit()
+        {
+            //Arrange
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(products.AsQueryable());
+
+            AdminController target = new AdminController(mock.Object);
+
+            //Act
+            Product result =  target.Edit(products[1].ProductID).Model as Product;
+
+            //Assert
+            Assert.AreEqual(2, result.ProductID);
+        }
+
+        [TestMethod]
+        public void Cant_Edit_NonExistent_Product()
+        {
+            //Arrange
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(products.AsQueryable());
+
+            AdminController target = new AdminController(mock.Object);
+
+            //Act
+            Product result = target.Edit(8).Model as Product;
+
+            //Assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public void Can_Save_Valid_Changes()
+        {
+            // Arrange - create mock repository
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            // Arrange - create the controller
+            AdminController target = new AdminController(mock.Object);
+            // Arrange - create a product
+            Product product = new Product { Name = "Test" };
+            // Act - try to save the product
+            ActionResult result = target.Edit(product);
+            // Assert - check that the repository was called
+            mock.Verify(m => m.SaveProduct(product), Times.Once());
+            // Assert - check the method result type
+            Assert.IsNotInstanceOfType(result, typeof(ViewResult));
+        }
+
+
+        [TestMethod]
+        public void Cant_Save_InValid_Changes()
+        {
+            // Arrange - create mock repository
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            // Arrange - create the controller
+            AdminController target = new AdminController(mock.Object);
+            // Arrange - create a product
+            Product product = new Product { Name = "Test" };
+            target.ModelState.AddModelError("error", "error");
+            // Act - try to save the product
+            ActionResult result = target.Edit(product);
+
+            // Assert - check that the repository was called
+            //mock.Verify(m => m.SaveProduct(product), Times.Never());
+
+            //if you dont want to pass product instance in above line use statement below
+            mock.Verify(m => m.SaveProduct(It.IsAny<Product>()), Times.Never());
+
+            // Assert - check the method result type
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
+        }
+
+        [TestMethod]
+        public void Can_Delete_Valid_Products()
+        {
+            
+            // Arrange - create the mock repository
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(products.AsQueryable());
+
+            // Arrange - create the controller
+            AdminController target = new AdminController(mock.Object);
+
+            // Act - delete the product
+            target.Delete(products[1].ProductID);
+            // Assert - ensure that the repository delete method was
+            // called with the correct Product
+            mock.Verify(m => m.DeleteProduct(products[1]), Times.Once());
+        }
+
+        [TestMethod]
+        public void Cant_Delete_InValid_Products()
+        {
+
+            // Arrange - create the mock repository
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(products.AsQueryable());
+
+            // Arrange - create the controller
+            AdminController target = new AdminController(mock.Object);
+
+            // Act - delete the product
+            target.Delete(100);
+            // Assert - ensure that the repository delete method was
+            // called with the correct Product
+            mock.Verify(m => m.DeleteProduct(It.IsAny<Product>()), Times.Never());
+        }
     }
 }
