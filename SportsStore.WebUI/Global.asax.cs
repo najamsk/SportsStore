@@ -5,8 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using SportsStore.WebUI.Infrastructure;
-using SportsStore.WebUI.Binders;
+
 using SportsStore.Domain.Entities;
+using SportsStore.WebUI.Binders;
 
 namespace SportsStore.WebUI
 {

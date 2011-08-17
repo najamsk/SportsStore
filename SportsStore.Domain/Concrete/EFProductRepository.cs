@@ -3,6 +3,9 @@ using SportsStore.Domain.Abstract;
 using SportsStore.Domain.Entities;
 using System.Data.Entity;
 using System.Data;
+using System.Xml;
+using System.Data.Entity.Infrastructure;
+using System.Text;
 
 
 
@@ -12,7 +15,15 @@ namespace SportsStore.Domain.Concrete {
         private EFDbContext context = new EFDbContext();
 
         public IQueryable<Product> Products {
-            get { return context.Products; }
+            get {                          
+                
+                using (var writer = new XmlTextWriter(@"d:/SportsStore.edmx", Encoding.Default))
+                {
+                    EdmxWriter.WriteEdmx(context, writer);
+                }
+                
+                return context.Products;             
+            }
         }
 
         public void SaveProduct(Product product)
